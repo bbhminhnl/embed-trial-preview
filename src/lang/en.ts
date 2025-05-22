@@ -1,3 +1,5 @@
+import { table } from "console";
+
 export const en = {
   translation: {
     setup_embed: "Embed Chat Settings",
@@ -18,5 +20,11 @@ export const en = {
     /** Network lost */
     disconnected: "Network disconnected...",
     reconnected: "Network reconnected",
+    device: "Device",
+
+    pc: "PC",
+    tablet: "Tablet",
+    mobile: "Mobile",
+    website: "Website",
   },
 };

@@ -1,22 +1,18 @@
+import {
+  selectLocaleGlobal,
+  selectPageUrlGlobal,
+  selectResetGlobal,
+  selectViewGlobal,
+  setResetGlobal,
+} from "@/stores/appSlice";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import CheckboxNew from "../checkbox/CheckboxNew";
-import CustomSelectSearch from "../select/CustomSelectSearch";
-import DividerY from "../Divider/DividerY";
 import { NetworkContext } from "../NWProvider";
 import { t } from "i18next";
 import { useSearchParams } from "react-router-dom";
 
 const Setting = () => {
-  /** Mock Ngôn ngữ */
-  const LANGUAGES = [
-    { key: t("page_setting"), value: "auto" },
-    { key: t("vietnamese"), value: "vi" },
-    { key: t("english"), value: "en" },
-    { key: t("korean"), value: "kr" },
-    { key: t("japanese"), value: "jp" },
-    { key: t("chinese"), value: "cn" },
-  ];
   /**
    * trạng thái online
    */
@@ -39,6 +35,23 @@ const Setting = () => {
    * IFrame
    */
   const IFRAME_REF = useRef<HTMLIFrameElement | null>(null);
+
+  /** Reset conversation */
+  const RESET_GLOBAL = useSelector(selectResetGlobal);
+
+  /** Locale global */
+  const LOCALE_GLOBAL = useSelector(selectLocaleGlobal);
+  /** Thiết bị hiện tại */
+  const DEVICE_GLOBAL = useSelector(selectViewGlobal);
+  /**
+   * Lấy page_id từ url
+   */
+  const PAGE_URL_GLOBAL = useSelector(selectPageUrlGlobal);
+
+  /**
+   * Khai báo dispatch
+   */
+  const dispatch = useDispatch();
 
   useEffect(() => {
     /**
@@ -82,11 +95,28 @@ const Setting = () => {
       );
     }
   };
+
+  useEffect(() => {
+    if (RESET_GLOBAL) {
+      /** Nếu có page_id thì gọi hàm fetch public page */
+      handleReset();
+      /** Reset lại trạng thái */
+      dispatch(setResetGlobal(false));
+    }
+  }, [RESET_GLOBAL]);
+
+  useEffect(() => {
+    if (LOCALE_GLOBAL) {
+      /** Nếu có page_id thì gọi hàm fetch public page */
+      handleChangeLanguage(LOCALE_GLOBAL);
+    }
+  }, [LOCALE_GLOBAL]);
+
   /** Hàm confirm */
   const handleChangeLanguage = (locale: any) => {
     /** Lưu locale vào localStorage */
     localStorage.setItem("locale", locale.toString());
-    setLocale(locale);
+    // setLocale(locale);
     /** Gửi message xuống SDK */
     if (IFRAME_REF?.current?.contentWindow) {
       IFRAME_REF.current?.contentWindow.postMessage(
@@ -111,47 +141,28 @@ const Setting = () => {
           {t("reconnected")}
         </div>
       )}
-      <div className="flex flex-col gap-y-2 p-4 bg-white md:rounded-lg w-full md:w-1/2">
-        {/* <div className="flex flex-shrink-0 h-10 justify-end w-full">
-          <button
-            onClick={() => {
-              handleConfirm();
-
-              setResetConversation(false);
-            }}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      <div className="flex flex-col gap-y-2 flex-grow min-h-0 h-full bg-white py-2 md:rounded-lg w-full ">
+        {PAGE_URL_GLOBAL && (
+          <div
+            className={`flex justify-center items-center w-full h-full ${
+              DEVICE_GLOBAL === "mobile" ? "max-w-[420px]" : ""
+            }`}
           >
-            {t("save")}
-          </button>
-        </div> */}
-        {/* <DividerY /> */}
-        <div className="flex flex-col gap-y-4">
-          <button
-            onClick={() => {
-              handleReset();
-            }}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded min-w-60 max-w-96 truncate"
-          >
-            {t("simulate_conversation")}
-          </button>
-          {/* <DividerY /> */}
-          <div className="flex gap-y-2 gap-x-4 items-center">
-            <span className="text-sm font-medium flex-shrink-0 ">
-              {t("language")}
-            </span>
-            <div className="w-full md:max-w-60">
-              <CustomSelectSearch
-                label={t("language")}
-                data={LANGUAGES}
-                selected={LANGUAGES.find((e) => e.value === locale)}
-                value={locale}
-                setSelected={(e) => {
-                  handleChangeLanguage(e.value);
-                }}
+            <div
+              className={`bg-black ${
+                DEVICE_GLOBAL === "mobile"
+                  ? "w-[390px] h-full rounded-[40px] overflow-hidden border border-gray-300 shadow-2xl"
+                  : "w-full h-full rounded-lg overflow-hidden"
+              }`}
+            >
+              <iframe
+                src={PAGE_URL_GLOBAL.toString()}
+                className="w-full h-full"
+                title="Iframe Preview"
               />
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

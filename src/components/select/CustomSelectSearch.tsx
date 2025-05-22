@@ -113,16 +113,14 @@ const CustomSelectSearch: React.FC<CustomSelectProps> = ({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between mt-1"
+            className="w-full justify-between border-slate-300"
             disabled={disabled}
           >
-            <span className="truncate">
-              {selected ? selected.key : `${label}`}
-            </span>
-            <ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
+            <span className="truncate">{selected ? selected.key : label}</span>
+            <ChevronDownIcon className="size-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0 shadow-sm border rounded">
+        <PopoverContent className="w-full p-0 shadow-sm border border-slate-200 rounded">
           <Command>
             <CommandList>
               <CommandGroup>

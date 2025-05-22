@@ -18,5 +18,10 @@ export const vn = {
     /** Mất mạng */
     disconnected: "Mất kết nối mạng...",
     reconnected: "Đã kết nối lại mạng",
+    device: "Thiết bị",
+    pc: "Máy tính",
+    tablet: "Máy tính bảng",
+    mobile: "Điện thoại",
+    website: "Website",
   },
 };

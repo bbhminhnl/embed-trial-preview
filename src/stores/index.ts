@@ -1,13 +1,14 @@
+import appReducer from "@/stores/appSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import loadingReducer from "@/stores/loadingSlice";
 import toastReducer from "@/stores/toastSlice";
-
 /**
  * Store của ứng dụng
  * Không được đổi tên
  */
 export const store = configureStore({
   reducer: {
+    app: appReducer,
     loading: loadingReducer,
     toast: toastReducer,
   },
