@@ -23,5 +23,7 @@ export const vn = {
     tablet: "Máy tính bảng",
     mobile: "Điện thoại",
     website: "Website",
+    enter_your_website: "Nhập địa chỉ website của bạn",
+    preview: "Xem trước",
   },
 };

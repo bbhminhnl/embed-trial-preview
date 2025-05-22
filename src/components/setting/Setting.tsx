@@ -3,11 +3,13 @@ import {
   selectPageUrlGlobal,
   selectResetGlobal,
   selectViewGlobal,
+  setPageUrlGlobal,
   setResetGlobal,
 } from "@/stores/appSlice";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { NetworkContext } from "../NWProvider";
 import { t } from "i18next";
 import { useSearchParams } from "react-router-dom";
@@ -24,13 +26,6 @@ const Setting = () => {
    */
   const [search_params] = useSearchParams();
 
-  /** Thêm locale từ localStorage */
-  const LOCALE = localStorage.getItem("locale") || "auto";
-
-  /**
-   * Ngôn ngữ
-   */
-  const [locale, setLocale] = useState<string | number>(LOCALE);
   /**
    * IFrame
    */
@@ -47,6 +42,9 @@ const Setting = () => {
    * Lấy page_id từ url
    */
   const PAGE_URL_GLOBAL = useSelector(selectPageUrlGlobal);
+
+  /** page_url*/
+  const [page_url, setPageUrl] = useState<string | number>("");
 
   /**
    * Khai báo dispatch
@@ -114,8 +112,6 @@ const Setting = () => {
 
   /** Hàm confirm */
   const handleChangeLanguage = (locale: any) => {
-    /** Lưu locale vào localStorage */
-    localStorage.setItem("locale", locale.toString());
     // setLocale(locale);
     /** Gửi message xuống SDK */
     if (IFRAME_REF?.current?.contentWindow) {
@@ -130,7 +126,15 @@ const Setting = () => {
     }
   };
   return (
-    <div className="flex h-full w-full">
+    <div
+      className={`flex h-full w-full relative ${
+        DEVICE_GLOBAL === "mobile"
+          ? "max-w-[390px]"
+          : DEVICE_GLOBAL === "tablet"
+          ? "max-w-[768px]"
+          : ""
+      }`}
+    >
       {!IS_ONLINE && (
         <div className="flex justify-center items-center fixed inset-0 bg-red-500 p-2 h-8 text-white text-sm z-50">
           {t("disconnected")}
@@ -141,18 +145,28 @@ const Setting = () => {
           {t("reconnected")}
         </div>
       )}
-      <div className="flex flex-col gap-y-2 flex-grow min-h-0 h-full bg-white py-2 md:rounded-lg w-full ">
-        {PAGE_URL_GLOBAL && (
-          <div
-            className={`flex justify-center items-center w-full h-full ${
-              DEVICE_GLOBAL === "mobile" ? "max-w-[420px]" : ""
-            }`}
-          >
+      <div
+        id="BBH-EMBED-CONTAINER"
+        className="relative flex flex-col gap-y-2 flex-grow min-h-0 h-full bg-white md:rounded-lg w-full "
+      >
+        <style>{`
+      #BBH-EMBED-IFRAME {
+        // all: unset !important;
+        position: absolute !important;
+        bottom: 0 !important;
+        right: 0 !important;
+        }
+    `}</style>
+
+        {PAGE_URL_GLOBAL ? (
+          <div className={`flex justify-center items-center w-full h-full `}>
             <div
-              className={`bg-black ${
+              className={`bg-black rounded-md overflow-hidden h-full ${
                 DEVICE_GLOBAL === "mobile"
-                  ? "w-[390px] h-full rounded-[40px] overflow-hidden border border-gray-300 shadow-2xl"
-                  : "w-full h-full rounded-lg overflow-hidden"
+                  ? "w-[390px] border border-gray-300 shadow-2xl"
+                  : DEVICE_GLOBAL === "tablet"
+                  ? "w-[768px] border border-gray-300 shadow-2xl"
+                  : "w-full"
               }`}
             >
               <iframe
@@ -161,6 +175,33 @@ const Setting = () => {
                 title="Iframe Preview"
               />
             </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-y-2 gap-x-4 items-center p-10">
+            <span className="text-sm flex-shrink-0 ">
+              {t("enter_your_website")}
+            </span>
+            <div className="w-full md:max-w-60">
+              <input
+                type="text"
+                className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm"
+                placeholder={"https://retion.ai"}
+                value={page_url}
+                onChange={(e) => {
+                  setPageUrl(e.target.value);
+                }}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                dispatch(setPageUrlGlobal(page_url));
+              }}
+              className="flex  bg-blue-700 hover:bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded-md items-center gap-2"
+            >
+              <ArrowPathIcon className="size-4" />
+              {t("preview")}
+            </button>
           </div>
         )}
       </div>

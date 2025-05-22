@@ -37,7 +37,7 @@ export default function Navbar() {
   const LOCALE = localStorage.getItem("locale") || "auto";
 
   /** Device */
-  const [device, setDevice] = useState<string | number>("PC");
+  const [device, setDevice] = useState<string | number>("pc");
 
   /** Ngôn ngữ*/
   const [locale, setLocale] = useState<string | number>(LOCALE);
@@ -66,7 +66,7 @@ export default function Navbar() {
       className={`fixed flex w-full top-0 md:px-3 px-2 pt-2 z-[999999999999999]`}
     >
       <div className="flex justify-between items-center flex-grow mx-auto h-16 px-6 py-3 bg-white bg-opacity-85 backdrop-blur-md  text-black shadow-sm border rounded-md border-slate-200">
-        <div className="flex items-center">
+        <div className="flex items-center flex-shrink-0 gap-x-2">
           <img src="./botbanhang.png" alt="Logo" className="h-11" />
         </div>
         <div className="flex items-center gap-x-4">
@@ -102,13 +102,16 @@ export default function Navbar() {
                 setSelected={(e) => {
                   // handleChangeLanguage(e.value);
                   setLocale(e.value);
-
+                  /** Lưu locale vào Redux */
                   dispatch(setLocaleGlobal(e.value));
+
+                  /** Lưu locale vào localStorage */
+                  localStorage.setItem("locale", e.value.toString());
                 }}
               />
             </div>
           </div>
-          <div className="flex gap-y-2 gap-x-4 items-center">
+          <div className=" md:flex gap-y-2 gap-x-4 items-center ">
             <span className="text-sm font-medium flex-shrink-0 ">
               {t("device")}
             </span>

@@ -1,7 +1,10 @@
+import { useDispatch, useSelector } from "react-redux";
+
+import { selectViewGlobal } from "@/stores/appSlice";
 import { showToast } from "@/stores/toastSlice";
 import { t } from "i18next";
-import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+
 /**
  * Khai báo global object BBH
  */
@@ -12,6 +15,7 @@ declare global {
   interface Window {
     BBH?: {
       init: (config: { page_id: string; config?: Record<string, any> }) => void;
+      destroy: () => void;
     };
   }
 }
@@ -51,6 +55,43 @@ const useChatbox = ({
   onError,
 }: UseChatboxOptions) => {
   const dispatch = useDispatch();
+  /**
+   * Lấy device
+   */
+  const DEVICE_GLOBAL = useSelector(selectViewGlobal);
+  /** Hàm dịch chuyển embed vào thẻ preview container */
+  function moveIframeIntoContainer() {
+    /**
+     * Tạo interval để kiểm tra xem iframe đã được tạo chưa
+     * Nếu có thì di chuyển nó vào thẻ preview container
+     */
+    const INTERVAL = setInterval(() => {
+      /**
+       * Lấy iframe và container
+       * @type {HTMLIFrameElement}
+       */
+      const IFRAME = document.getElementById("BBH-EMBED-IFRAME");
+      /**
+       * Lấy container
+       * @type {HTMLDivElement}
+       */
+
+      const CONTAINER = document.getElementById("BBH-EMBED-CONTAINER");
+
+      /**
+       * Nếu IFRAME và CONTAINER tồn tại thì di chuyển IFRAME vào CONTAINER
+       */
+      if (IFRAME && CONTAINER) {
+        CONTAINER.appendChild(IFRAME);
+        IFRAME.style.width = "100%";
+        IFRAME.style.height = "100%";
+        IFRAME.style.border = "none";
+        clearInterval(INTERVAL);
+        console.log("➡ BBH iframe moved into container.");
+      }
+    }, 300);
+  }
+
   useEffect(() => {
     /**
      * Nếu không có page_id hoặc page_type thi bao loi
@@ -124,6 +165,9 @@ const useChatbox = ({
         console.log("BBH initialized with page_id:", page_id);
         onLoaded?.();
 
+        /** 👉 Chờ iframe xuất hiện và di chuyển nó */
+        moveIframeIntoContainer();
+
         sendUserData();
       } catch (error) {
         const err =
@@ -158,6 +202,26 @@ const useChatbox = ({
       }, 1000);
     }
   }, [page_id, page_type]);
+
+  useEffect(() => {
+    /** Chờ iframe move xong */
+    const TIME_OUT = setTimeout(() => {
+      /**
+       * Nếu không có page_id thì return
+       */
+      if (window.BBH && page_id && page_type === "WEBSITE") {
+        window.BBH?.destroy();
+        /** Gọi lại init sau khi iframe đã được chuyển vị trí */
+        window.BBH.init({
+          page_id: page_id,
+          config: { locale },
+        });
+      }
+      /** delay nhỏ để đảm bảo đã move xong */
+    }, 500);
+
+    return () => clearTimeout(TIME_OUT);
+  }, [DEVICE_GLOBAL]);
 };
 
 export default useChatbox;

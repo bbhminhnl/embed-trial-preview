@@ -26,5 +26,7 @@ export const en = {
     tablet: "Tablet",
     mobile: "Mobile",
     website: "Website",
+    enter_your_website: "Enter your website address",
+    preview: "Preview",
   },
 };
