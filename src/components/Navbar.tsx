@@ -43,7 +43,9 @@ export default function Navbar() {
   const [locale, setLocale] = useState<string | number>(LOCALE);
   /** page_url*/
   const [page_url, setPageUrl] = useState<string | number>("");
-
+  /**
+   * Hàm debounce cập nhật link hiển thị trong iframe vào store
+   */
   const debouncedDispatch = useMemo(
     () =>
       debounce((value: string | number) => {
@@ -51,6 +53,9 @@ export default function Navbar() {
       }, 500),
     [dispatch]
   );
+  /**
+   * Hàm cập nhật lại locale khi có thay đổi
+   */
   useEffect(() => {
     return () => {
       debouncedDispatch.cancel();
