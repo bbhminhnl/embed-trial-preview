@@ -5,8 +5,9 @@ import {
   selectViewGlobal,
   setPageUrlGlobal,
   setResetGlobal,
+  setSubPageUrlGlobal,
 } from "@/stores/appSlice";
-import { useContext, useEffect, useRef, useState } from "react";
+import { use, useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
@@ -110,6 +111,37 @@ const Setting = () => {
     }
   }, [LOCALE_GLOBAL]);
 
+  useEffect(() => {
+    /** Thêm event listener cho thông điệp */
+    window.addEventListener("message", handleMessage);
+
+    /** Hàm cleanup */
+    return () => {
+      /** Xóa event listener */
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
+  /**
+   * Lưu trạng thái mở embed
+   */
+  const [is_open_embed, setIsOpenEmbed] = useState(false);
+  /** Hàm xử lý event post message từ cha */
+  const handleMessage = (event: MessageEvent) => {
+    let PAYLOAD: any;
+
+    try {
+      /** Nếu event.data là string, cố gắng parse nó */
+      PAYLOAD =
+        typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+    } catch (error) {
+      console.error("Lỗi khi parse event.data:", error);
+      return;
+    }
+
+    /** Lưu trạng thái mở embed */
+    setIsOpenEmbed(PAYLOAD?.is_show);
+  };
+
   /** Hàm confirm */
   const handleChangeLanguage = (locale: any) => {
     // setLocale(locale);
@@ -155,6 +187,13 @@ const Setting = () => {
         position: absolute !important;
         bottom: 0 !important;
         right: 0 !important;
+        
+        width: ${
+          DEVICE_GLOBAL === "mobile" && is_open_embed ? "100% !important" : ""
+        };
+        height: ${
+          DEVICE_GLOBAL === "mobile" && is_open_embed ? "100% !important" : ""
+        };
         }
     `}</style>
 
@@ -195,9 +234,9 @@ const Setting = () => {
             <button
               type="button"
               onClick={() => {
-                dispatch(setPageUrlGlobal(page_url));
+                dispatch(setSubPageUrlGlobal(page_url));
               }}
-              className="flex  bg-blue-700 hover:bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded-md items-center gap-2"
+              className="flex  bg-blue-700 hover:bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded-md items-center gap-2 cursor-pointer"
             >
               <ArrowPathIcon className="size-4" />
               {t("preview")}

@@ -1,5 +1,4 @@
 import Setting from "../../components/setting/Setting";
-import { t } from "i18next";
 
 export default function Home() {
   return (

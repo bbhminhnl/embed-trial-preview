@@ -14,4 +14,6 @@ export interface AppState {
   device?: string | number;
   /** Trạng thái page */
   page_url?: string | number;
+  /** sub */
+  sub_page_url?: string | number;
 }

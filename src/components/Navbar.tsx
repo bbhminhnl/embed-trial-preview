@@ -1,16 +1,17 @@
 import {
+  selectSubPageUrlGlobal,
   setLocaleGlobal,
   setPageUrlGlobal,
   setResetGlobal,
   setViewGlobal,
 } from "@/stores/appSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import CustomSelectSearch from "./select/CustomSelectSearch";
 import debounce from "lodash/debounce";
 import { t } from "i18next";
-import { useDispatch } from "react-redux";
 
 export default function Navbar() {
   /** Mock Ngôn ngữ */
@@ -43,6 +44,10 @@ export default function Navbar() {
   const [locale, setLocale] = useState<string | number>(LOCALE);
   /** page_url*/
   const [page_url, setPageUrl] = useState<string | number>("");
+
+  /** Sub url */
+  const SUB_URL = useSelector(selectSubPageUrlGlobal);
+
   /**
    * Hàm debounce cập nhật link hiển thị trong iframe vào store
    */
@@ -61,6 +66,15 @@ export default function Navbar() {
       debouncedDispatch.cancel();
     };
   }, [debouncedDispatch]);
+
+  useEffect(() => {
+    setPageUrl(SUB_URL);
+    /**
+     * Lưu page_url vào Redux
+     */
+    dispatch(setPageUrlGlobal(SUB_URL));
+  }, [SUB_URL]);
+
   return (
     <div
       className={`fixed flex w-full top-0 md:px-3 px-2 pt-2 z-[999999999999999]`}
@@ -131,7 +145,7 @@ export default function Navbar() {
           </div>
           <button
             onClick={() => dispatch(setResetGlobal(true))}
-            className="flex  bg-blue-700 hover:bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded items-center gap-2"
+            className="flex  bg-blue-700 hover:bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded items-center gap-2 cursor-pointer"
           >
             <ArrowPathIcon className="size-4" />
             Cập nhật

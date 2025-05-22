@@ -20,6 +20,10 @@ const INITIAL_STATE: AppState = {
    * page url
    */
   page_url: "",
+  /**
+   * sub page url
+   */
+  sub_page_url: "",
 };
 
 export const appSlice = createSlice({
@@ -44,6 +48,10 @@ export const appSlice = createSlice({
     setPageUrlGlobal: (state, action: PayloadAction<string | number>) => {
       state.page_url = action.payload;
     },
+    /** Cập nhật page url */
+    setSubPageUrlGlobal: (state, action: PayloadAction<string | number>) => {
+      state.sub_page_url = action.payload;
+    },
   },
 });
 
@@ -53,6 +61,7 @@ export const {
   setLocaleGlobal,
   setViewGlobal,
   setPageUrlGlobal,
+  setSubPageUrlGlobal,
 } = appSlice.actions;
 
 /**
@@ -71,5 +80,10 @@ export const selectViewGlobal = (state: RootState) => state.app.device;
  * Trạng thái page url
  */
 export const selectPageUrlGlobal = (state: RootState) => state.app.page_url;
+/**
+ * Trạng thái sub page url
+ */
+export const selectSubPageUrlGlobal = (state: RootState) =>
+  state.app.sub_page_url;
 
 export default appSlice.reducer;
