@@ -63,6 +63,9 @@ export default function Navbar() {
    */
   useEffect(() => {
     return () => {
+      /**
+       * Hủy hàm debounce
+       */
       debouncedDispatch.cancel();
     };
   }, [debouncedDispatch]);
@@ -76,13 +79,12 @@ export default function Navbar() {
   }, [SUB_URL]);
 
   return (
-    <div
-      className={`fixed flex w-full top-0 md:px-3 px-2 pt-2 z-[999999999999999]`}
-    >
+    <div className={`fixed flex w-full top-0 md:px-3 px-2 pt-2 z-[99999999]`}>
       <div className="flex justify-between items-center flex-grow mx-auto h-16 px-6 py-3 bg-white bg-opacity-85 backdrop-blur-md  text-black shadow-sm border rounded-md border-slate-200">
         <div className="flex items-center flex-shrink-0 gap-x-2">
           <img src="./botbanhang.png" alt="Logo" className="h-11" />
         </div>
+
         <div className="flex items-center gap-x-4">
           <div className="flex gap-y-2 gap-x-4 items-center">
             <span className="text-sm font-medium flex-shrink-0 ">
@@ -145,7 +147,7 @@ export default function Navbar() {
           </div>
           <button
             onClick={() => dispatch(setResetGlobal(true))}
-            className="flex  bg-blue-700 hover:bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded items-center gap-2 cursor-pointer"
+            className="flex  bg-blue-700 hover:bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded items-center gap-2 cursor-pointer flex-shrink-0"
           >
             <ArrowPathIcon className="size-4" />
             Cập nhật
