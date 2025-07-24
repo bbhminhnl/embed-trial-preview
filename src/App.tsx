@@ -58,7 +58,7 @@ export default function App() {
        * Lay thong tin cua page
        */
       const RES = await fetch(
-        `${HOST["chatbox_public"]}/embed/page/read_page?page_id=${page_id}`
+        `${HOST["chatbox_public"]}embed/page/read_page?page_id=${page_id}`
       );
       /**
        * Parse data json
