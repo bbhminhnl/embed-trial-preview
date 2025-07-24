@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
+import { HOST } from "./api/fetchApi";
 import Home from "./pages/Home/Home";
 import Navbar from "./components/Navbar";
 import NotFound from "./pages/NotFound";
@@ -57,7 +58,7 @@ export default function App() {
        * Lay thong tin cua page
        */
       const RES = await fetch(
-        `https://chatbox-public-v2.botbanhang.vn/embed/page/read_page?page_id=${page_id}`
+        `${HOST["chatbox_public"]}/embed/page/read_page?page_id=${page_id}`
       );
       /**
        * Parse data json

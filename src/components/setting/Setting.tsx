@@ -11,6 +11,7 @@ import { use, useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { HOST } from "@/api/fetchApi";
 import { NetworkContext } from "../NWProvider";
 import { t } from "i18next";
 import { useSearchParams } from "react-router-dom";
@@ -224,7 +225,7 @@ const Setting = () => {
               <input
                 type="text"
                 className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm"
-                placeholder={"https://retion.ai"}
+                placeholder={HOST["domain"]}
                 value={page_url}
                 onChange={(e) => {
                   setPageUrl(e.target.value);

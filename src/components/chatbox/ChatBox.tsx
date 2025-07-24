@@ -1,3 +1,4 @@
+import { HOST } from "@/api/fetchApi";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -21,7 +22,7 @@ function ChatboxPage() {
 
     // Tạo script element
     const script = document.createElement("script");
-    script.src = "https://chatbox-embed-sdk.botbanhang.vn/dist/sdk.min.js";
+    script.src = HOST["chatbox_embed"];
     script.async = true;
 
     script.onload = () => {

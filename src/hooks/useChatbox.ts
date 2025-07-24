@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
+import { HOST } from "@/api/fetchApi";
 import { selectViewGlobal } from "@/stores/appSlice";
 import { showToast } from "@/stores/toastSlice";
 import { t } from "i18next";
@@ -125,11 +126,12 @@ const useChatbox = ({
      * Tạo script
      */
     const SCRIPT = document.createElement("script");
-    SCRIPT.src = "https://chatbox-embed-sdk.botbanhang.vn/dist/sdk.min.js";
+
+    SCRIPT.src = HOST["chatbox_embed"];
     // SCRIPT.src = "https://sdk.retify.ai/dist/sdk.min.js";
 
     // SCRIPT.src = "https://bbh-embed-chat-sdk.vercel.app/dist/sdk.min.js"; //Development
-    // SCRIPT.src = "http://192.168.1.106:9090/sdk.js";
+    // SCRIPT.src = "http://192.168.1.102:9090/sdk.js";
     SCRIPT.async = true;
     /**
      * Xu ly khi load xong

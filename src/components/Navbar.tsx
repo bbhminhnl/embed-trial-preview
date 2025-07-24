@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import CustomSelectSearch from "./select/CustomSelectSearch";
+import { HOST } from "@/api/fetchApi";
 import debounce from "lodash/debounce";
 import { t } from "i18next";
 
@@ -94,7 +95,7 @@ export default function Navbar() {
               <input
                 type="text"
                 className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm"
-                placeholder={"https://retion.ai"}
+                placeholder={HOST["domain"]}
                 value={page_url}
                 onChange={(e) => {
                   setPageUrl(e.target.value);
